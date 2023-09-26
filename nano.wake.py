@@ -3,15 +3,16 @@ import speech_recognition as sr
 from lib.traning import *
 from os import system
 import random
+import datetime
 
-# Initialize the text-to-speech engine
+# Init the text to speech
 text_to_speech = pyttsx3.init()
 
-# Initialize the recognizer
+# Init the recog
 recognizer = sr.Recognizer()
 
 # Set the wake word
-WAKE_WORD = "nano"
+WAKE_WORD = ["nano", "hey nano", "okay nano"]
 
 def listen_for_wake_word():
     with sr.Microphone() as source:
@@ -23,7 +24,7 @@ def listen_for_wake_word():
         wake_word = recognizer.recognize_google(audio).lower()
         print("Detected: " + wake_word)
 
-        if WAKE_WORD in wake_word:
+        if wake_word in WAKE_WORD:
             print("I'm here, how may I help you?")
             text_to_speech.say("I'm here, how may I help you?")
             text_to_speech.runAndWait()
@@ -46,17 +47,20 @@ def respond_to_command():
         command = recognizer.recognize_google(audio).lower()
         print("You said: " + command)
 
-        if "hello" in command:
+        if greet[0] in command or greet[1] in command or greet[2] in command:
             response = "Hello! How can I help you?"
-        elif "what's the time" in command:
-            import datetime
+        
+        elif timec[0] in command or timec[1] in command:
             time = datetime.datetime.now().strftime("%I:%M %p")
             response = f"The current time is {time}"
-        elif "goodbye" in command:
+        
+        elif command in close:
             response = "Goodbye! Have a great day!"
+        
         elif code[0] in command or code[1] in command or code[2] in command:
             response = "Ok, opening Visual Code for you!"
-            system('start "" "C:\\Users\\AnhPham\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\\"')
+            system(f'start "" "{code_path}"')
+
         else:
             response = "I didn't understand that."
 
